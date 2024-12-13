@@ -1,11 +1,11 @@
 
 function formatWithSpaces(value, spaces = 10) {
     let diff = spaces - String(value).length;
-    
+
     if (diff < 0) {
         diff = 0;
     }
-   
+
     return `${' '.repeat(diff)}${value}`;
 }
 

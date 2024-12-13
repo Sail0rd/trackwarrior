@@ -16,7 +16,7 @@ const main = async () => {
          if (action == ACTION_START) {
             
              const totalActive = parseInt((await call('task', ['+ACTIVE', 'status:pending', 'count', 'rc.verbose:off'], true)).trim());
-             const maxActive = config.getInt('max_active_tasks', settings.maxActiveTasks);
+             const maxActive = config.getInt('max_active_tasks', settings.maxActiveTasks) || 1;
              
             if (totalActive + 1 > maxActive) {
                 console.log(`Only ${totalActive} task(s) can be active at time. See 'max_active_tasks' in .taskrc.`);
