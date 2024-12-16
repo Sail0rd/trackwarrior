@@ -10,14 +10,14 @@ const main = async () => {
 
     const old = new Record(input.old);
     const current = new Record(input.current);
-    
+
     if (action) {
          // if one is started and has action
          if (action == ACTION_START) {
-            
+
              const totalActive = parseInt((await call('task', ['+ACTIVE', 'status:pending', 'count', 'rc.verbose:off'], true)).trim());
              const maxActive = config.getInt('max_active_tasks', settings.maxActiveTasks) || 1;
-             
+
             if (totalActive + 1 > maxActive) {
                 console.log(`Only ${totalActive} task(s) can be active at time. See 'max_active_tasks' in .taskrc.`);
                 process.exit(1);
@@ -25,13 +25,13 @@ const main = async () => {
 
             await call('timew', ['stop', ':yes'], true)
          }
-        
+
         await call('timew', [action, ...current.getTags(), ':yes'])
     } else if (flags(ACTION_OLD_START | ACTION_CURRENT_START)) {
         // if both are started
         const oldTags = old.getTags()
         const currentTags = current.getTags()
-        
+
         if (!sameArray(oldTags, currentTags)) {
             await call('timew', ['untag', '@1', ...oldTags, ':yes']);
             await call('timew', ['tag', '@1', ...currentTags, ':yes']);
@@ -39,7 +39,7 @@ const main = async () => {
 
         const oldAnnotation = old.getAnnotation();
         const currentAnnotation = current.getAnnotation();
-        
+
         if (oldAnnotation != currentAnnotation) {
             await call('timew', ['annotate', '@1', currentAnnotation]);
         }
@@ -50,7 +50,7 @@ const main = async () => {
             current.delete('start');
         }
         const ids = await call('timew', ['trackwarrior-ids.js', current.getId(), current.getEntry(), '-', 'now', ':ids'], true);
-        
+
         if (ids.length > 0) {
             await call('timew', ['delete', ...ids.split(' ')], false);
             current.setDuration('0');
@@ -59,7 +59,7 @@ const main = async () => {
         const duration = await call('timew', ['trackwarrior-duration.js', current.getId(), current.getEntry(), '-', 'now'], true);
         current.setDuration(duration);
     }
-    
+
     process.stdout.write(current.output());
 };
 
