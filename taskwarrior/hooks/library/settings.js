@@ -2,7 +2,7 @@ const path = require("path");
 const os = require("os");
 const { Config } = require("./Config");
 const fs = require("fs");
-const configPath = os.environ["TRACKRC"];
+const configPath = process.env.TRACKRC;
 
 const settings = {
   taskrc: path.join(os.homedir(), configPath || ".taskrc"),
